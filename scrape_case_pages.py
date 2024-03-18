@@ -52,6 +52,11 @@ def try_again(func):
 
 
 def load_cases(filename):
+    """
+    Load case numbers from a csv file.
+    :param filename:
+    :return:
+    """
     filename = filename if filename else 'cases.csv'
     cases = pd.read_csv(filename)
     return cases['Case Number'].tolist()
@@ -59,6 +64,11 @@ def load_cases(filename):
 
 @try_again
 def scrape_case(case):
+    """
+    Get the html for a case by case number. Write the html to a file.
+    :param case:
+    :return:
+    """
     case_url = url + case
     response = requests.get(case_url)
     if response.status_code != 200:
