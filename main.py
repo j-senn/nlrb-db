@@ -9,7 +9,7 @@ import requests
 import pandas as pd
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename=f'logs/nlrb_case_scraper_{datetime.datetime}.log', level=logging.INFO)
+logging.basicConfig(filename=f'logs/nlrb_case_scraper_{datetime.datetime.now().strftime("%Y-%m-%d")}', level=logging.INFO)
 
 url = 'https://www.nlrb.gov/case/'
 data_dir = 'case_htmls'
@@ -26,6 +26,7 @@ def timing(func):
         result = func(*args, **kwargs)
         end = time.time()
         print(f'{func.__name__} took {end - start} seconds')
+        logger.info(f'{func.__name__} took {end - start} seconds')
         return result
     return wrapper
 
@@ -83,7 +84,7 @@ def main():
     case_numbers = load_cases()
     logger.info(f"Downloading {len(case_numbers)} cases")
 
-    parallel_scrape(case_numbers)
+    parallel_scrape(case_numbers[:50])
     logger.info(f'Downloaded {len(case_numbers)} at {datetime.datetime.now()}')
     return
 
