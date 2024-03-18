@@ -1,3 +1,4 @@
+import argparse
 import datetime
 from concurrent.futures import ThreadPoolExecutor
 
@@ -50,8 +51,9 @@ def try_again(func):
     return wrapper
 
 
-def load_cases():
-    cases = pd.read_csv('cases.csv')
+def load_cases(filename):
+    filename = filename if filename else 'cases.csv'
+    cases = pd.read_csv(filename)
     return cases['Case Number'].tolist()
 
 
@@ -81,10 +83,15 @@ def parallel_scrape(cases):
 
 @timing
 def main():
-    case_numbers = load_cases()
+    parse = argparse.ArgumentParser(description='Scrape NLRB case data')
+    parse.add_argument('-c', '--cases', type=str, help='Path to case numbers')
+
+    args = parse.parse_args()
+
+    case_numbers = load_cases(args.cases)
     logger.info(f"Downloading {len(case_numbers)} cases")
 
-    parallel_scrape(case_numbers[:50])
+    parallel_scrape(case_numbers)
     logger.info(f'Downloaded {len(case_numbers)} at {datetime.datetime.now()}')
     return
 
