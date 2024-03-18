@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 import logging
@@ -66,9 +67,16 @@ def load_cases(filename):
 def scrape_case(case):
     """
     Get the html for a case by case number. Write the html to a file.
+    Skip case # if file already exists.
     :param case:
     :return:
     """
+    case_file = f'{data_dir}/{case}.html'
+    if os.path.exists(case_file):
+        logger.debug(f'{case_file} already exists. Skipping download')
+        return
+
+    # Get the page for case #
     case_url = url + case
     response = requests.get(case_url)
     if response.status_code != 200:
@@ -77,8 +85,8 @@ def scrape_case(case):
 
     case_soup = bs(response.content, 'html.parser').prettify()
 
-    # TODO: do we care about diffs?
-    with open(f'{data_dir}/{case}.html', 'w', encoding='utf-8') as f:
+    # Write the page to a file
+    with open(case_file, 'w', encoding='utf-8') as f:
         f.write(case_soup)
         logger.debug(f'Downloaded {case}.html at {time.localtime()}')
     return
