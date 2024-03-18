@@ -42,12 +42,17 @@ def try_again(func):
     def wrapper(*args, **kwargs):
         max_attempts = 3
         delay = 3
+        error = None
         for i in range(max_attempts):
             try:
                 return func(*args, **kwargs)
+            # On any failure, catch, warn, sleep in case of rate limiting, and try again
             except Exception as e:
+                logger.warning(f'Error executing {func.__name__} with {",".join(*args)} and {", ".join(**kwargs)}: {e}')
                 time.sleep(delay)
-        logger.error(f'Error executing {func.__name__} with {",".join(*args)} and {", ".join(**kwargs)}: {e}')
+                error = e
+        # If we've gotten here 3 requests have failed. Log error and return None
+        logger.error(f'Error executing {func.__name__} with {",".join(*args)} and {", ".join(**kwargs)}: {error}')
 
     return wrapper
 
