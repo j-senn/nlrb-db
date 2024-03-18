@@ -11,6 +11,10 @@ Example command line usage:
 
 `python scrape_case_pages.py -c case_numbers.csv`
 
+File descriptions
+- `cases.tar.gz` zipped CSVs of case details as downloaded from the NLRB website. Batched by time periods with ~50k rows
+- `case_numbers_*.csv` extracted case numbers from the original CSVs in the described time period.
+
 Notes on behavior:
 - This script skips cases that already have a file in the `case_htmls` directory.
 - This process is still slow taking 3-4 hours per 50,000 cases.
