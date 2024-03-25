@@ -32,9 +32,26 @@ class Participant:
         self.names = [name for name in participant_details[2:]]
 
     @staticmethod
-    def find_participants(html: str):
+    def find_participant_table(html: str):
+        '''
+        Get the Participant table body. If no table is found and no message indicating no data is available raise an exception.
+        :param html:
+        :return:
+        '''
         soup = bs(html, 'html.parser')
-        soup = soup.find('table', {'class': 'Participants'}).find('tbody')
-        # rows_with_data = [row.parent.parent for row in soup.find_all('br')]
-        participants = [Participant(str(row)) for row in soup.find_all('tr') if not row.find('td', {'colspan': '3'})]
-        return participants
+        table = soup.find('table', {'class': 'Participants'})
+        if table is None:
+            no_data_message = soup.find(string=re.compile('Participants data is not available'))
+            if no_data_message is None:
+                raise Exception('ERROR: No participant data or message found.')
+        return table
+
+    @staticmethod
+    def find_participants(html: str):
+        table = Participant.find_participant_table(html)
+        if table is None:
+            return None
+
+        table = table.find('tbody')
+
+        return [Participant(str(row)) for row in table.find_all('tr') if not row.find('td', {'colspan': '3'})]

@@ -2,6 +2,7 @@ import re
 
 from bs4 import BeautifulSoup as bs
 
+
 class CaseInfo:
     case_number = None
     date_filed = None
@@ -33,4 +34,10 @@ class CaseInfo:
                f'{self.num_employees} | {self.location} | {self.region} | {self.description[:25]}'
 
     def find_field(self, soup, key: str):
-        return soup.find('b', string=re.compile(key)).next_sibling.strip()
+        try:
+            field = soup.find('b', string=re.compile(key)).next_sibling.strip()
+        except AttributeError:
+            # TODO: Logging?
+            field = None
+
+        return field
