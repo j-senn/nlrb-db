@@ -4,19 +4,11 @@ from os import path
 
 from bs4 import BeautifulSoup as bs
 
+from models.Allegations import Allegations
 from models.CaseInfo import CaseInfo
 from models.Docket import Docket
 from models.CaseActivity import CaseActivity
 from models.Participant import Participant
-
-
-class Allegations:
-    def __init__(self, html: str):
-        soup = bs(html, 'html.parser')
-        soup = soup.find('div', {'id': 'case_docket_activity_data'})
-        has_docs = soup.find(string=re.compile("Allegations data is not available"))
-        if has_docs is not None:
-            raise NotImplementedError('Allegations data hasnt been implemented.')
 
 
 class RelatedCases:
@@ -61,12 +53,7 @@ class CaseHtml:
             raise e
 
     def load_allegations(self, html: str):
-        try:
-            return Allegations(html)
-        except NotImplementedError as e:
-            print(self.info.case_number + "HAS ALLEGATIONS USE FOR IMPLEMENTATION")
-            print(e)
-            raise e
+        return Allegations.find_allegations(html)
 
     def load_participants(self, html: str):
         return Participant.find_participants(html)
