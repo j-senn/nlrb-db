@@ -3,13 +3,15 @@ import re
 
 
 class RelatedCase:
+    parent_case_number = None
     case_number = None
     case_name = None
     status = None
 
-    def __init__(self, html: str):
+    def __init__(self, case_number: str, html: str):
         soup = bs(html, 'html.parser')
         columns = soup.find_all('td')
+        self.parent_case_number = case_number
         self.case_number = columns[0].text.strip()
         self.case_name = columns[1].text.strip()
         self.status = columns[2].text.strip()
@@ -33,10 +35,11 @@ class RelatedCase:
         return table
 
     @staticmethod
-    def find_related_cases(html: str):
+    def find_related_cases(case_number: str, html: str):
         table = RelatedCase.find_case_table(html)
         if table is None:
             return None
         table = table.find('tbody')
-        return [RelatedCase(str(tr)) for tr in table.find_all('tr')
+        return [RelatedCase(case_number, str(tr))
+                for tr in table.find_all('tr')
 ]

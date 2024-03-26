@@ -7,7 +7,7 @@ class Docket:
     date = None
     document = None
     issued_by = None
-    has_pdf = False
+    url = None
 
     def __init__(self, html: str):
         soup = bs(html, 'html.parser')
@@ -21,10 +21,12 @@ class Docket:
         # TODO: grab link as well. Maybe swap has_pdf bool for link
         self.document = docket[1].text.strip()
         self.issued_by = docket[2].text.strip()
-        self.has_pdf = '*' not in self.document  # '*' indicates a pdf is not present
+
+        if docket[1].find('a') is not None:
+            self.url = docket[1].find('a')['href']
 
     def __str__(self):
-        return f'Docket: {self.date} | {self.document} | {self.issued_by} | {self.has_pdf}'
+        return f'Docket: {self.date} | {self.document} | {self.issued_by} | Has public doc: {self.url is not None}'
 
     @staticmethod
     def find_docket_table(html: str):

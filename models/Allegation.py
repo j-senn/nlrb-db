@@ -15,17 +15,17 @@ class Allegation:
     @staticmethod
     def find_allegation_list(html: str):
         """
-        Get the Allegation table body. If no table is found and no message indicating no data is available raise an exception.
+        Get the Allegations list. If no list is found and no message indicating no data is available raise an exception.
         :param html:
         :return:
         """
         soup = bs(html, 'html.parser')
-        allegations_list = soup.find('h2', text=re.compile('Allegations')).find_next('ul')
 
-        if allegations_list is None:
-            no_data_message = soup.find(string=re.compile('Allegations data is not available'))
-            if no_data_message is None:
-                raise Exception('ERROR: No allegations data or message found.')
+        no_data_message = soup.find(string=re.compile('Allegations data is not available'))
+        if no_data_message is not None:
+            return None
+
+        allegations_list = soup.find('h2', text=re.compile('Allegations')).find_next('ul')
 
         return allegations_list
 
