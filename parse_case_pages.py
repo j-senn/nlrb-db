@@ -20,10 +20,10 @@ class Case:
 
         self.info = CaseInfo(main_html)
         self.case_number = self.info.case_number
-        self.docket = Docket.find_dockets(main_html)
+        # self.docket = Docket.find_dockets(main_html)
         self.related_documents = RelatedDocument.find_related_documents(self.case_number, main_html)
-        self.allegations = Allegation.find_allegations(main_html)
-        self.participants = Participant.find_participants(main_html)
+        # self.allegations = Allegation.find_allegations(main_html)
+        # self.participants = Participant.find_participants(main_html)
         self.related_cases = RelatedCase.find_related_cases(self.case_number, main_html)
         return
 
