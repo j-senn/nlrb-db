@@ -31,7 +31,7 @@ class CaseInfo:
     def __str__(self):
         return f'Case Info: ' \
                f'{self.case_number} | {self.date_filed} | {self.status} |' \
-               f'{self.num_employees} | {self.location} | {self.region} | {self.description[:25]}'
+               f'{self.num_employees} | {self.location} | {self.region}'
 
     def find_field(self, soup, key: str):
         try:
