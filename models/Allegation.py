@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as bs
 import re
 
 
-class Allegations:
+class Allegation:
     allegation = None
 
     def __init__(self, html: str):
@@ -31,7 +31,7 @@ class Allegations:
 
     @staticmethod
     def find_allegations(html: str):
-        allegations_list = Allegations.find_allegation_list(html)
+        allegations_list = Allegation.find_allegation_list(html)
         if allegations_list is None:
             return None
-        return [Allegations(str(li)) for li in allegations_list.find_all('li')]
+        return [Allegation(str(li)) for li in allegations_list.find_all('li')]
